@@ -1,0 +1,27 @@
+Project users {
+    database_type: 'PostgreSQL'
+}
+
+Table users {
+    id uuid [not null]
+    name varchar(50) [not null]
+    email varchar(100) [not null]
+    created_at timestamp [not null, default: `now()`]
+    updated_at timestamp [not null, default: `now()`]
+
+    indexes {
+        id [pk]
+        name [name: 'idx_counter_name']
+    }
+}
+
+Table migration {
+    id uuid [not null]
+    name varchar(150) [not null]
+    sql text [not null]
+    migrated_at timestamp [not null, default: `now()`]
+
+    indexes {
+        id [pk]
+    }
+}
