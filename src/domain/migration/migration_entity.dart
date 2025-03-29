@@ -18,4 +18,15 @@ class MigrationEntity {
   String get name => _name;
 
   String get sql => _sql;
+
+  @override
+  String toString() {
+    return '''
+      MigrationEntity{
+        id: $_id,
+        name: $_name,
+        sql: $_sql
+      }
+    ''';
+  }
 }
