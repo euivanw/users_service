@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:uuid/uuid_value.dart';
 
 final class UpdateUserInputDto {
@@ -26,13 +28,11 @@ final class UpdateUserInputDto {
 
   @override
   String toString() {
-    return '''
-      UpdateUserInputDto{
-        id: $_id,
-        firstName: $_firstName,
-        lastName: $_lastName,
-        email: $_email
-      }
-    ''';
+    return json.encode({
+      'id': _id.uuid,
+      'firstName': _firstName,
+      'lastName': _lastName,
+      'email': _email,
+    });
   }
 }

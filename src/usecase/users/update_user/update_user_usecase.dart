@@ -9,17 +9,17 @@ import 'update_user_output_dto.dart';
 final class UpdateUserUsecase
     implements
         Usecase<UpdateUserInputDto, UpdateUserOutputDto, UsersException> {
-  final UsersRepository _usersRepository;
+  final UsersRepository _repository;
 
-  const UpdateUserUsecase({required UsersRepository usersRepository})
-    : _usersRepository = usersRepository;
+  const UpdateUserUsecase({required UsersRepository repository})
+    : _repository = repository;
 
   @override
   Future<Either<UsersException, UpdateUserOutputDto>> execute(
     UpdateUserInputDto input,
   ) async {
     try {
-      final user = await _usersRepository.updateUser(
+      final user = await _repository.updateUser(
         id: input.id,
         firstName: input.firstName,
         lastName: input.lastName,
