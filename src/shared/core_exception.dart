@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class CoreException implements Exception {
   final String _businessMessage;
   final String? _technicalMessage;
@@ -19,12 +21,10 @@ class CoreException implements Exception {
 
   @override
   String toString() {
-    return '''
-      CoreException: {
-        businessMessage: $_businessMessage,
-        technicalMessage: $_technicalMessage,
-        stackTrace: $_stackTrace,
-      }
-    ''';
+    return json.encode({
+      'businessMessage': _businessMessage,
+      'technicalMessage': _technicalMessage,
+      'stackTrace': _stackTrace?.toString(),
+    });
   }
 }
