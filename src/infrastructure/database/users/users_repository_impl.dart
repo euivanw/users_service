@@ -1,5 +1,5 @@
 import 'package:postgres/postgres.dart';
-import 'package:uuid/uuid_value.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../domain/users/users_entity.dart';
 import '../../../domain/users/users_exception.dart';
@@ -17,9 +17,42 @@ final class UsersRepositoryImpl implements UsersRepository {
     required String firstName,
     required String lastName,
     required String email,
-  }) {
-    // TODO: implement createUser
-    throw UnimplementedError();
+  }) async {
+    try {
+      final userId = Uuid().v4();
+
+      final result = await _connection.execute(
+        Sql.named('''
+          INSERT INTO users (id, first_name, last_name, email)
+          VALUES (@id, @firstName, @lastName, @email)
+          RETURNING id, first_name, last_name, email, created_at
+        '''),
+        parameters: {
+          'id': userId,
+          'firstName': firstName,
+          'lastName': lastName,
+          'email': email,
+        },
+      );
+
+      return UsersEntity(
+        id: UuidValue.fromString(result[0][0] as String),
+        firstName: result[0][1] as String,
+        lastName: result[0][2] as String,
+        email: result[0][3] as String,
+        createdAt: result[0][4] as DateTime,
+        updatedAt: null,
+      );
+    } on UsersException {
+      rethrow;
+    } catch (exception, stackTrace) {
+      throw UsersException(
+        businessMessage:
+            'Failed to create user with name [$firstName $lastName] and e-mail [$email]. Please try again.',
+        technicalMessage: 'Unknown error: $exception',
+        stackTrace: stackTrace,
+      );
+    }
   }
 
   @override
