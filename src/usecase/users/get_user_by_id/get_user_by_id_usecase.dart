@@ -9,17 +9,17 @@ import 'get_user_by_id_output_dto.dart';
 final class GetUserByIdUsecase
     implements
         Usecase<GetUserByIdInputDto, GetUserByIdOutputDto, UsersException> {
-  final UsersRepository _usersRepository;
+  final UsersRepository _repository;
 
-  const GetUserByIdUsecase({required UsersRepository usersRepository})
-    : _usersRepository = usersRepository;
+  const GetUserByIdUsecase({required UsersRepository repository})
+    : _repository = repository;
 
   @override
   Future<Either<UsersException, GetUserByIdOutputDto>> execute(
     GetUserByIdInputDto input,
   ) async {
     try {
-      final user = await _usersRepository.getUserById(id: input.id);
+      final user = await _repository.getUserById(id: input.id);
 
       return Right(
         GetUserByIdOutputDto(
