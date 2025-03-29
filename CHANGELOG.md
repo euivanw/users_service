@@ -18,6 +18,7 @@ to the project.
 
 - Ability to generate database migrations.
 - Ability to create a users table into the database.
+- Ability to create, update, delete, read and list users.
 
 ### Dependencies
 
