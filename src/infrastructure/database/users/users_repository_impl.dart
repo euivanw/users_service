@@ -124,8 +124,43 @@ final class UsersRepositoryImpl implements UsersRepository {
     required String firstName,
     required String lastName,
     required String email,
-  }) {
-    // TODO: implement updateUser
-    throw UnimplementedError();
+  }) async {
+    try {
+      final result = await _connection.execute(
+        Sql.named('''
+          UPDATE  users
+          SET     first_name = @firstName,
+                  last_name = @lastName,
+                  email = @email,
+                  updated_at = NOW()
+          WHERE   id = @id
+          RETURNING id, first_name, last_name, email, created_at, updated_at
+        '''),
+        parameters: {
+          'id': id.uuid,
+          'firstName': firstName,
+          'lastName': lastName,
+          'email': email,
+        },
+      );
+
+      return UsersEntity(
+        id: UuidValue.fromString(result[0][0] as String),
+        firstName: result[0][1] as String,
+        lastName: result[0][2] as String,
+        email: result[0][3] as String,
+        createdAt: result[0][4] as DateTime,
+        updatedAt: result[0][5] as DateTime,
+      );
+    } on UsersException {
+      rethrow;
+    } catch (exception, stackTrace) {
+      throw UsersException(
+        businessMessage:
+            'Failed to update user with name [$firstName $lastName] and e-mail [$email]. Please try again.',
+        technicalMessage: 'Unknown error: $exception',
+        stackTrace: stackTrace,
+      );
+    }
   }
 }
