@@ -1,5 +1,5 @@
 extension StringExtension on String {
-  String get formatSQL {
+  String get formatText {
     return replaceAll(RegExp(r'\s+'), ' ').trim();
   }
 }

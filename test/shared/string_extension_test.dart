@@ -7,7 +7,7 @@ void main() {
     group('formatSQL', () {
       test('should format SQL string with multiple spaces', () {
         const sql = 'SELECT   *   FROM   users';
-        expect(sql.formatSQL, equals('SELECT * FROM users'));
+        expect(sql.formatText, equals('SELECT * FROM users'));
       });
 
       test('should format SQL string with newlines and tabs', () {
@@ -16,22 +16,22 @@ void main() {
           FROM    users
           WHERE   id = 1
         ''';
-        expect(sql.formatSQL, equals('SELECT * FROM users WHERE id = 1'));
+        expect(sql.formatText, equals('SELECT * FROM users WHERE id = 1'));
       });
 
       test('should trim leading and trailing spaces', () {
         const sql = '   SELECT * FROM users    ';
-        expect(sql.formatSQL, equals('SELECT * FROM users'));
+        expect(sql.formatText, equals('SELECT * FROM users'));
       });
 
       test('should handle empty string', () {
         const sql = '';
-        expect(sql.formatSQL, equals(''));
+        expect(sql.formatText, equals(''));
       });
 
       test('should handle string with only whitespace', () {
         const sql = '   \n\t   \r\n   ';
-        expect(sql.formatSQL, equals(''));
+        expect(sql.formatText, equals(''));
       });
     });
   });
