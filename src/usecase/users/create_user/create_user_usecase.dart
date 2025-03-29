@@ -9,17 +9,17 @@ import 'create_user_output_dto.dart';
 final class CreateUserUsecase
     implements
         Usecase<CreateUserInputDto, CreateUserOutputDto, UsersException> {
-  final UsersRepository _usersRepository;
+  final UsersRepository _repository;
 
-  const CreateUserUsecase({required UsersRepository usersRepository})
-    : _usersRepository = usersRepository;
+  const CreateUserUsecase({required UsersRepository repository})
+    : _repository = repository;
 
   @override
   Future<Either<UsersException, CreateUserOutputDto>> execute(
     CreateUserInputDto input,
   ) async {
     try {
-      final user = await _usersRepository.createUser(
+      final user = await _repository.createUser(
         firstName: input.firstName,
         lastName: input.lastName,
         email: input.email,
