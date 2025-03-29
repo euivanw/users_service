@@ -8,7 +8,7 @@ import 'migrate_input_dto.dart';
 import 'migrate_output_dto.dart';
 import 'migrate_type.dart';
 
-class MigrateUsecase
+final class MigrateUsecase
     implements Usecase<MigrateInputDto, MigrateOutputDto, MigrationException> {
   final Logger _logger;
   final MigrationRepository _repository;

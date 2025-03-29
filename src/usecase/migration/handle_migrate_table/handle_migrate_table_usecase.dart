@@ -7,7 +7,7 @@ import '../../shared/usecase.dart';
 import 'handle_migrate_table_input_dto.dart';
 import 'handle_migrate_table_output_dto.dart';
 
-class HandleMigrateTableUsecase
+final class HandleMigrateTableUsecase
     implements
         Usecase<
           HandleMigrateTableInputDto,

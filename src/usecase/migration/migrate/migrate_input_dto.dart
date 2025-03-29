@@ -1,6 +1,6 @@
 import 'package:uuid/uuid.dart';
 
-class MigrateInputDto {
+final class MigrateInputDto {
   final UuidValue _id;
   final String _name;
   final String _sql;

@@ -1,1 +1,1 @@
-class HandleMigrateTableInputDto {}
+final class HandleMigrateTableInputDto {}
