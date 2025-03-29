@@ -55,7 +55,7 @@ class MigrationRepositoryImpl implements MigrationRepository {
             @sql
           )
         '''),
-        parameters: {'id': id.uuid, 'name': name.trim(), 'sql': sql.formatSQL},
+        parameters: {'id': id.uuid, 'name': name.trim(), 'sql': sql.formatText},
       );
 
       return true;
