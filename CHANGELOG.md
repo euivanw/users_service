@@ -17,6 +17,7 @@ to the project.
 ### Added
 
 - Ability to generate database migrations.
+- Ability to create a users table into the database.
 
 ### Dependencies
 
