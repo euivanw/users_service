@@ -1,0 +1,1 @@
+enum MigrateType { added, unchanged }
