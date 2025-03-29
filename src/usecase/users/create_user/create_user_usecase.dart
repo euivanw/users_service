@@ -6,12 +6,12 @@ import '../../shared/usecase.dart';
 import 'create_user_input_dto.dart';
 import 'create_user_output_dto.dart';
 
-final class CreateUserUseCase
+final class CreateUserUsecase
     implements
         Usecase<CreateUserInputDto, CreateUserOutputDto, UsersException> {
   final UsersRepository _usersRepository;
 
-  const CreateUserUseCase({required UsersRepository usersRepository})
+  const CreateUserUsecase({required UsersRepository usersRepository})
     : _usersRepository = usersRepository;
 
   @override
