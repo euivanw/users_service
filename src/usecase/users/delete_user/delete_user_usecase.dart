@@ -9,17 +9,17 @@ import 'delete_user_output_dto.dart';
 final class DeleteUserUsecase
     implements
         Usecase<DeleteUserInputDto, DeleteUserOutputDto, UsersException> {
-  final UsersRepository _usersRepository;
+  final UsersRepository _repository;
 
-  const DeleteUserUsecase({required UsersRepository usersRepository})
-    : _usersRepository = usersRepository;
+  const DeleteUserUsecase({required UsersRepository repository})
+    : _repository = repository;
 
   @override
   Future<Either<UsersException, DeleteUserOutputDto>> execute(
     DeleteUserInputDto input,
   ) async {
     try {
-      final user = await _usersRepository.deleteUser(id: input.id);
+      final user = await _repository.deleteUser(id: input.id);
 
       return Right(
         DeleteUserOutputDto(
