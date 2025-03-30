@@ -49,18 +49,12 @@ final class GetUserByIdRoute implements CoreRouter {
     return user.fold(
       ifLeft: (exception) {
         if (exception is UserNotFoundException) {
-          _logger.warning(exception.businessMessage);
           return JsonResponse.notFound(exception.businessMessage);
         }
 
-        _logger.severe(
-          'Error fetching user: $userId (${exception.technicalMessage}).',
-          exception,
-        );
         return JsonResponse.internalServerError(exception.businessMessage);
       },
       ifRight: (output) {
-        _logger.info('User found: $output');
         return JsonResponse.ok(
           GetUserByIdResponseDto.fromOutputDto(output).toMap(),
         );
