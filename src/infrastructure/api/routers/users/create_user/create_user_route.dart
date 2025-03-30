@@ -33,52 +33,53 @@ final class CreateUserRoute implements CoreRouter {
   }
 
   Future<Response> _createUser(Request request) async {
-    final requestBody = await request.readAsString();
-    CreateUserRequestDto requestBodyObject;
+    _logger.info('Creating user...');
 
-    try {
-      requestBodyObject = CreateUserRequestDto.fromJson(requestBody);
-    } catch (exception) {
-      _logger.severe(
-        'Invalid JSON format: ${exception.toString().formatText}',
-        exception,
-      );
-      return JsonResponse.badRequest('Invalid JSON format.');
+    final body = await request.readAsString();
+    final requestBody = _validateParseBody(body);
+
+    if (requestBody.isLeft) {
+      return (requestBody as Left).value;
     }
 
-    _logger.info('Creating user with: $requestBodyObject');
-
-    final validationBody = requestBodyObject.validate();
-
-    if (validationBody.isLeft) {
-      _logger.severe(
-        'Validation failed: ${validationBody.toString()}',
-        validationBody,
-      );
-
-      return JsonResponse.badRequest(
-        (validationBody as Left).value.businessMessage,
-      );
-    }
-
+    final userRequestBody = (requestBody as Right).value;
     final repository = UsersRepositoryImpl(connection: _dbconn);
     final usecase = CreateUserUsecase(repository: repository);
-    final created = await usecase.execute(requestBodyObject.toInputDto());
+    final created = await usecase.execute(userRequestBody.toInputDto());
 
     return created.fold(
       ifLeft: (exception) {
-        _logger.severe(
-          'Error creating user: ${requestBodyObject.toInputDto()} (${exception.technicalMessage}).',
-          exception,
-        );
         return JsonResponse.internalServerError(exception.businessMessage);
       },
       ifRight: (output) {
-        _logger.info('User created successfully: ${output.toString()}');
         return JsonResponse.created(
           CreateUserResponseDto.fromOutputDto(output).toMap(),
         );
       },
     );
+  }
+
+  Either<Response, CreateUserRequestDto> _validateParseBody(String body) {
+    CreateUserRequestDto requestBody;
+
+    try {
+      requestBody = CreateUserRequestDto.fromJson(body);
+    } catch (exception) {
+      final message = exception.toString().formatText;
+      _logger.warning('Invalid JSON format: $message');
+
+      return Left(JsonResponse.badRequest('Invalid JSON format.'));
+    }
+
+    final validationBody = requestBody.validate();
+
+    if (validationBody.isLeft) {
+      final message = (validationBody as Left).value.businessMessage;
+      _logger.warning('Validation failed: $message');
+
+      return Left(JsonResponse.badRequest(message));
+    }
+
+    return Right(requestBody);
   }
 }

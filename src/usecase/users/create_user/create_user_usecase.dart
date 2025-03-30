@@ -1,4 +1,5 @@
 import 'package:dart_either/src/dart_either.dart';
+import 'package:logging/logging.dart';
 
 import '../../../domain/users/users_exception.dart';
 import '../../../domain/users/users_repository.dart';
@@ -9,10 +10,12 @@ import 'create_user_output_dto.dart';
 final class CreateUserUsecase
     implements
         Usecase<CreateUserInputDto, CreateUserOutputDto, UsersException> {
+  final Logger _logger;
   final UsersRepository _repository;
 
-  const CreateUserUsecase({required UsersRepository repository})
-    : _repository = repository;
+  CreateUserUsecase({required UsersRepository repository})
+    : _repository = repository,
+      _logger = Logger('CreateUserUsecase');
 
   @override
   Future<Either<UsersException, CreateUserOutputDto>> execute(
@@ -25,6 +28,8 @@ final class CreateUserUsecase
         email: input.email,
       );
 
+      _logger.info('User created successfully: ${user.id}');
+
       return Right(
         CreateUserOutputDto(
           id: user.id,
@@ -34,9 +39,21 @@ final class CreateUserUsecase
           createdAt: user.createdAt,
         ),
       );
-    } on UsersException catch (e) {
-      return Left(e);
+    } on UsersException catch (exception, stackTrace) {
+      _logger.severe(
+        'Failed to create user: ${exception.businessMessage}',
+        exception,
+        stackTrace,
+      );
+
+      return Left(exception);
     } catch (exception, stackTrace) {
+      _logger.severe(
+        'Failed to create user: ${exception.toString()}',
+        exception,
+        stackTrace,
+      );
+
       return Left(
         UsersException(
           businessMessage:
