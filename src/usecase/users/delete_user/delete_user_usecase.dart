@@ -1,4 +1,5 @@
 import 'package:dart_either/src/dart_either.dart';
+import 'package:logging/logging.dart';
 
 import '../../../domain/users/users_exception.dart';
 import '../../../domain/users/users_repository.dart';
@@ -9,10 +10,12 @@ import 'delete_user_output_dto.dart';
 final class DeleteUserUsecase
     implements
         Usecase<DeleteUserInputDto, DeleteUserOutputDto, UsersException> {
+  final Logger _logger;
   final UsersRepository _repository;
 
-  const DeleteUserUsecase({required UsersRepository repository})
-    : _repository = repository;
+  DeleteUserUsecase({required UsersRepository repository})
+    : _repository = repository,
+      _logger = Logger('DeleteUserUsecase');
 
   @override
   Future<Either<UsersException, DeleteUserOutputDto>> execute(
@@ -20,6 +23,8 @@ final class DeleteUserUsecase
   ) async {
     try {
       final user = await _repository.deleteUser(id: input.id);
+
+      _logger.info('User deleted successfully: ${user.id}');
 
       return Right(
         DeleteUserOutputDto(
@@ -31,9 +36,17 @@ final class DeleteUserUsecase
           updatedAt: user.updatedAt,
         ),
       );
-    } on UsersException catch (e) {
-      return Left(e);
+    } on UsersException catch (exception, stackTrace) {
+      _logger.warning('Failed to delete user: ${exception.businessMessage}');
+
+      return Left(exception);
     } catch (exception, stackTrace) {
+      _logger.warning(
+        'An unexpected error occurred while deleting the user.',
+        exception,
+        stackTrace,
+      );
+
       return Left(
         UsersException(
           businessMessage:

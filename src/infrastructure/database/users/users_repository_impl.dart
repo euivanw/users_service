@@ -80,6 +80,12 @@ final class UsersRepositoryImpl implements UsersRepository {
         parameters: {'id': id.uuid},
       );
 
+      if (user.affectedRows == 0) {
+        throw UserNotFoundException(
+          businessMessage: 'User with ID [${id.uuid}] not found.',
+        );
+      }
+
       return UsersEntity(
         id: UuidValue.fromString(user.first[0] as String),
         firstName: user.first[1] as String,
@@ -88,6 +94,8 @@ final class UsersRepositoryImpl implements UsersRepository {
         createdAt: user.first[4] as DateTime,
         updatedAt: user.first[5] as DateTime?,
       );
+    } on UsersException {
+      rethrow;
     } catch (exception, stackTrace) {
       throw UsersException(
         businessMessage: 'Failed to delete user with ID [${id.uuid}]',
