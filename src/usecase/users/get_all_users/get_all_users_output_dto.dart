@@ -1,23 +1,24 @@
+import 'dart:convert';
+
 import 'package:uuid/uuid.dart';
 
 final class GetAllUsersOutputDto {
-  final List<UserDto> _users;
+  final List<GetAllUsersOutputUserDto> _users;
 
-  const GetAllUsersOutputDto({required List<UserDto> users}) : _users = users;
+  const GetAllUsersOutputDto({required List<GetAllUsersOutputUserDto> users})
+    : _users = users;
 
-  List<UserDto> get users => _users;
+  List<GetAllUsersOutputUserDto> get users => _users;
 
   @override
   String toString() {
-    return '''
-      GetAllUsersOutputDto{
-        users: $_users
-      }
-    ''';
+    return json.encode({
+      'data': _users.map((user) => user.toString()).toList(),
+    });
   }
 }
 
-final class UserDto {
+final class GetAllUsersOutputUserDto {
   final UuidValue _id;
   final String _firstName;
   final String _lastName;
@@ -25,7 +26,7 @@ final class UserDto {
   final DateTime _createdAt;
   final DateTime? _updatedAt;
 
-  const UserDto({
+  const GetAllUsersOutputUserDto({
     required UuidValue id,
     required String firstName,
     required String lastName,
@@ -53,15 +54,13 @@ final class UserDto {
 
   @override
   String toString() {
-    return '''
-      UserDto{
-        id: $_id,
-        firstName: $_firstName,
-        lastName: $_lastName,
-        email: $_email,
-        createdAt: $_createdAt,
-        updatedAt: $_updatedAt
-      }
-    ''';
+    return json.encode({
+      'id': _id.uuid,
+      'firstName': _firstName,
+      'lastName': _lastName,
+      'email': _email,
+      'createdAt': _createdAt.toIso8601String(),
+      'updatedAt': _updatedAt?.toIso8601String(),
+    });
   }
 }
