@@ -11,6 +11,9 @@ import '../../../../database/users/users_repository_impl.dart';
 import '../../server_instance.dart';
 import '../../shared/core_router.dart';
 import '../../shared/json_response.dart';
+import '../../shared/link_method_enum.dart';
+import '../../shared/link_relation_enum.dart';
+import '../../shared/links_response_dto.dart';
 import 'delete_user_response_dto.dart';
 
 final class DeleteUserRoute implements CoreRouter {
@@ -54,10 +57,31 @@ final class DeleteUserRoute implements CoreRouter {
         return JsonResponse.internalServerError(exception.businessMessage);
       },
       ifRight: (output) {
-        return JsonResponse.ok(
-          DeleteUserResponseDto.fromOutputDto(output).toMap(),
-        );
+        final links = _createLinks(output.id);
+        final deletedUser = DeleteUserResponseDto.fromOutputDto(output, links);
+
+        return JsonResponse.ok(deletedUser.toMap());
       },
     );
+  }
+
+  List<LinksResponseDto> _createLinks(UuidValue id) {
+    return [
+      LinksResponseDto(
+        rel: LinkRelationEnum.self,
+        href: '/${_instance.apiVersion}/users/${id.uuid}',
+        method: LinkMethodEnum.delete,
+      ),
+      LinksResponseDto(
+        rel: LinkRelationEnum.list,
+        href: '/${_instance.apiVersion}/users',
+        method: LinkMethodEnum.get,
+      ),
+      LinksResponseDto(
+        rel: LinkRelationEnum.create,
+        href: '/${_instance.apiVersion}/users',
+        method: LinkMethodEnum.post,
+      ),
+    ];
   }
 }
