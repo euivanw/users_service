@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:uuid/uuid.dart';
 
 final class DeleteUserOutputDto {
@@ -36,15 +38,13 @@ final class DeleteUserOutputDto {
 
   @override
   String toString() {
-    return '''
-      DeleteUserOutputDto{
-        id: $_id,
-        firstName: $_firstName,
-        lastName: $_lastName,
-        email: $_email,
-        createdAt: $_createdAt,
-        updatedAt: $_updatedAt
-      }
-    ''';
+    return json.encode({
+      'id': _id.uuid,
+      'firstName': _firstName,
+      'lastName': _lastName,
+      'email': _email,
+      'createdAt': _createdAt.toIso8601String(),
+      'updatedAt': _updatedAt?.toIso8601String(),
+    });
   }
 }
