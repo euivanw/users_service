@@ -1,6 +1,7 @@
 import 'package:uuid/uuid_value.dart';
 
 import '../../../../../usecase/users/update_user/update_user_output_dto.dart';
+import '../../shared/links_response_dto.dart';
 
 final class UpdateUserResponseDto {
   final UuidValue _id;
@@ -9,6 +10,7 @@ final class UpdateUserResponseDto {
   final String _email;
   final DateTime _createdAt;
   final DateTime? _updatedAt;
+  final List<LinksResponseDto>? _links;
 
   const UpdateUserResponseDto({
     required UuidValue id,
@@ -17,14 +19,19 @@ final class UpdateUserResponseDto {
     required String email,
     required DateTime createdAt,
     DateTime? updatedAt,
+    List<LinksResponseDto>? links,
   }) : _id = id,
        _firstName = firstName,
        _lastName = lastName,
        _email = email,
        _createdAt = createdAt,
-       _updatedAt = updatedAt;
+       _updatedAt = updatedAt,
+       _links = links;
 
-  factory UpdateUserResponseDto.fromOutputDto(UpdateUserOutputDto output) {
+  factory UpdateUserResponseDto.fromOutputDto(
+    UpdateUserOutputDto output,
+    List<LinksResponseDto> links,
+  ) {
     return UpdateUserResponseDto(
       id: output.id,
       firstName: output.firstName,
@@ -32,6 +39,7 @@ final class UpdateUserResponseDto {
       email: output.email,
       createdAt: output.createdAt,
       updatedAt: output.updatedAt,
+      links: links,
     );
   }
 
@@ -43,6 +51,7 @@ final class UpdateUserResponseDto {
       'email': _email,
       'createdAt': _createdAt.toIso8601String(),
       'updatedAt': _updatedAt?.toIso8601String(),
+      'links': _links?.map((link) => link.toMap()).toList(),
     };
   }
 }

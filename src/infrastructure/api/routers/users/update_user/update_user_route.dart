@@ -12,6 +12,7 @@ import '../../../../database/users/users_repository_impl.dart';
 import '../../server_instance.dart';
 import '../../shared/core_router.dart';
 import '../../shared/json_response.dart';
+import '../shared/create_links_function.dart';
 import 'update_user_request_dto.dart';
 import 'update_user_response_dto.dart';
 
@@ -64,9 +65,10 @@ final class UpdateUserRoute implements CoreRouter {
         return JsonResponse.internalServerError(exception.businessMessage);
       },
       ifRight: (output) {
-        return JsonResponse.created(
-          UpdateUserResponseDto.fromOutputDto(output).toMap(),
-        );
+        final links = createUserLinks(_instance.apiVersion, output.id);
+        final updatedUser = UpdateUserResponseDto.fromOutputDto(output, links);
+
+        return JsonResponse.created(updatedUser.toMap());
       },
     );
   }
