@@ -17,11 +17,11 @@ class MainRoutes implements CoreRouter {
   Future<void> configure() async {
     var route = '/';
     _instance.app.get(route, _handleMain);
-    _logger.info('Registering route: GET    $route');
+    _logger.info('Registering route GET $route');
 
     route = '/${_instance.apiVersion}/';
     _instance.app.get(route, _handleMain);
-    _logger.info('Registering route: GET    $route');
+    _logger.info('Registering route GET $route');
   }
 
   static Response _handleMain(Request request) {

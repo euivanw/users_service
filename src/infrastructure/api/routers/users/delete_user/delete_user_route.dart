@@ -29,7 +29,7 @@ final class DeleteUserRoute implements CoreRouter {
     final route = '/${_instance.apiVersion}/users/<userId>';
     _instance.app.delete(route, _deleteUser);
 
-    _logger.info('Registering route: DELETE $route');
+    _logger.info('Registering route DELETE $route');
   }
 
   Future<Response> _deleteUser(Request request, String userId) async {
@@ -46,7 +46,10 @@ final class DeleteUserRoute implements CoreRouter {
 
     return deleted.fold(
       ifLeft: (exception) {
-        _logger.severe('Error deleting user: ${exception.businessMessage}');
+        _logger.severe(
+          'Error deleting user: ${exception.businessMessage}',
+          exception,
+        );
         return JsonResponse.internalServerError(exception.businessMessage);
       },
       ifRight: (output) {

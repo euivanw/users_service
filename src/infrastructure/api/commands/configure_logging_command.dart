@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:logging/logging.dart';
@@ -8,7 +9,15 @@ abstract class ConfigureLoggingCommand {
 
     Logger.root.onRecord.listen((record) {
       stdout.writeln(
-        '${record.time.toIso8601String()} : ${record.level.name} : ${record.message}',
+        json.encode({
+          'time': record.time.toIso8601String(),
+          'sequenceNumber': record.sequenceNumber,
+          'level': record.level.name,
+          'logger': record.loggerName,
+          'message': record.message,
+          'error': record.error?.toString(),
+          'stackTrace': record.stackTrace?.toString(),
+        }),
       );
     });
   }

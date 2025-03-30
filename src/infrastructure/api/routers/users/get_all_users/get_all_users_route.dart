@@ -27,7 +27,7 @@ final class GetAllUsersRoute implements CoreRouter {
     final route = '/${_instance.apiVersion}/users';
     _instance.app.get(route, _getAllUsers);
 
-    _logger.info('Registering route: GET    $route');
+    _logger.info('Registering route GET $route');
   }
 
   Future<Response> _getAllUsers(Request request) async {

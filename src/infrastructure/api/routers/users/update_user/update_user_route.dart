@@ -31,7 +31,7 @@ final class UpdateUserRoute implements CoreRouter {
     final route = '/${_instance.apiVersion}/users/<userId>';
     _instance.app.put(route, _createUser);
 
-    _logger.info('Registering route: PUT    $route');
+    _logger.info('Registering route PUT $route');
   }
 
   Future<Response> _createUser(Request request, String userId) async {
@@ -48,8 +48,9 @@ final class UpdateUserRoute implements CoreRouter {
       final id = UuidValue.fromString(userId);
       requestBodyObject = UpdateUserRequestDto.fromJson(requestBody, id);
     } catch (exception) {
-      _logger.warning(
+      _logger.severe(
         'Invalid JSON format: ${exception.toString().formatText}',
+        exception,
       );
       return JsonResponse.badRequest('Invalid JSON format.');
     }
@@ -57,7 +58,10 @@ final class UpdateUserRoute implements CoreRouter {
     final validationBody = requestBodyObject.validate();
 
     if (validationBody.isLeft) {
-      _logger.warning('Validation failed: ${validationBody.toString()}');
+      _logger.severe(
+        'Validation failed: ${validationBody.toString()}',
+        validationBody,
+      );
 
       return JsonResponse.badRequest(
         (validationBody as Left).value.businessMessage,

@@ -33,9 +33,19 @@ final class MigrateUsecase
       _logger.info('Migration [${input.name}] executed successfully.');
 
       return Right(MigrateOutputDto(type: MigrateType.added));
-    } on MigrationException catch (e) {
-      return Left(e);
+    } on MigrationException catch (exception, stackTrace) {
+      _logger.severe(
+        'Error executing migration [${input.name}]: ${exception.technicalMessage}.',
+        exception,
+        stackTrace,
+      );
+      return Left(exception);
     } catch (exception, stackTrace) {
+      _logger.severe(
+        'An unexpected error occurred while executing migration [${input.name}]: ${exception.toString()}.',
+        exception,
+        stackTrace,
+      );
       return Left(
         MigrationException(
           businessMessage: 'An unexpected error occurred while migrating.',

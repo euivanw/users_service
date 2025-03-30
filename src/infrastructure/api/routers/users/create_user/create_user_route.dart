@@ -29,7 +29,7 @@ final class CreateUserRoute implements CoreRouter {
     final route = '/${_instance.apiVersion}/users';
     _instance.app.post(route, _createUser);
 
-    _logger.info('Registering route: POST   $route');
+    _logger.info('Registering route POST $route');
   }
 
   Future<Response> _createUser(Request request) async {
@@ -39,8 +39,9 @@ final class CreateUserRoute implements CoreRouter {
     try {
       requestBodyObject = CreateUserRequestDto.fromJson(requestBody);
     } catch (exception) {
-      _logger.warning(
+      _logger.severe(
         'Invalid JSON format: ${exception.toString().formatText}',
+        exception,
       );
       return JsonResponse.badRequest('Invalid JSON format.');
     }
@@ -50,7 +51,10 @@ final class CreateUserRoute implements CoreRouter {
     final validationBody = requestBodyObject.validate();
 
     if (validationBody.isLeft) {
-      _logger.warning('Validation failed: ${validationBody.toString()}');
+      _logger.severe(
+        'Validation failed: ${validationBody.toString()}',
+        validationBody,
+      );
 
       return JsonResponse.badRequest(
         (validationBody as Left).value.businessMessage,

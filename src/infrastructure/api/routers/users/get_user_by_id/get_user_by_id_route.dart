@@ -30,7 +30,7 @@ final class GetUserByIdRoute implements CoreRouter {
     final route = '/${_instance.apiVersion}/users/<userId>';
     _instance.app.get(route, _getUserById);
 
-    _logger.info('Registering route: GET    $route');
+    _logger.info('Registering route GET $route');
   }
 
   Future<Response> _getUserById(Request request, String userId) async {
