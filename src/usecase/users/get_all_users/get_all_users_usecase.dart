@@ -9,24 +9,24 @@ import 'get_all_users_output_dto.dart';
 final class GetAllUsersUsecase
     implements
         Usecase<GetAllUsersInputDto, GetAllUsersOutputDto, UsersException> {
-  final UsersRepository _usersRepository;
+  final UsersRepository _repository;
 
-  const GetAllUsersUsecase({required UsersRepository usersRepository})
-    : _usersRepository = usersRepository;
+  const GetAllUsersUsecase({required UsersRepository repository})
+    : _repository = repository;
 
   @override
   Future<Either<UsersException, GetAllUsersOutputDto>> execute(
     GetAllUsersInputDto input,
   ) async {
     try {
-      final users = await _usersRepository.getAllUsers();
+      final users = await _repository.getAllUsers();
 
       return Right(
         GetAllUsersOutputDto(
           users:
               users
                   .map(
-                    (user) => UserDto(
+                    (user) => GetAllUsersOutputUserDto(
                       id: user.id,
                       firstName: user.firstName,
                       lastName: user.lastName,
