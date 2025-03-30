@@ -36,7 +36,7 @@ final class DeleteUserUsecase
           updatedAt: user.updatedAt,
         ),
       );
-    } on UsersException catch (exception, stackTrace) {
+    } on UsersException catch (exception) {
       _logger.warning('Failed to delete user: ${exception.businessMessage}');
 
       return Left(exception);
