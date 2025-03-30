@@ -12,26 +12,22 @@ import '../exceptions/migration_exception.dart';
 
 abstract class MigrateDatabaseCommand {
   static Future<void> migrateDatabase(Connection dbconn) async {
-    final migrationRepository = MigrationRepositoryImpl(connection: dbconn);
-    final migrationTableUsecase = HandleMigrateTableUsecase(
-      repository: migrationRepository,
-    );
-    final migrationStatus = await migrationTableUsecase.execute(
-      HandleMigrateTableInputDto(),
-    );
+    final repository = MigrationRepositoryImpl(connection: dbconn);
+    final usecase = HandleMigrateTableUsecase(repository: repository);
+    final input = HandleMigrateTableInputDto();
+    final migrationStatus = await usecase.execute(input);
 
     if (migrationStatus.isLeft) {
-      migrationStatus.mapLeft(
-        (exception) =>
-            throw MigrationException(
-              businessMessage: exception.businessMessage,
-              technicalMessage: exception.technicalMessage,
-              stackTrace: exception.stackTrace,
-            ),
-      );
+      migrationStatus.mapLeft((exception) {
+        throw MigrationException(
+          businessMessage: exception.businessMessage,
+          technicalMessage: exception.technicalMessage,
+          stackTrace: exception.stackTrace,
+        );
+      });
     }
 
-    final migrateUsecase = MigrateUsecase(repository: migrationRepository);
+    final migrateUsecase = MigrateUsecase(repository: repository);
 
     for (final migration in MigrationConfig.migrations) {
       final input = MigrateInputDto(
@@ -40,9 +36,9 @@ abstract class MigrateDatabaseCommand {
         sql: migration.sql,
       );
 
-      final result = await migrateUsecase.execute(input);
+      final migrated = await migrateUsecase.execute(input);
 
-      result.fold(
+      migrated.fold(
         ifLeft: (exception) {
           throw MigrationException(
             businessMessage: exception.businessMessage,

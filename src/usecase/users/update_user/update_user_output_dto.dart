@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:uuid/uuid.dart';
 
 final class UpdateUserOutputDto {
@@ -35,16 +33,4 @@ final class UpdateUserOutputDto {
   DateTime get createdAt => _createdAt;
 
   DateTime? get updatedAt => _updatedAt;
-
-  @override
-  String toString() {
-    return json.encode({
-      'id': _id.uuid,
-      'firstName': _firstName,
-      'lastName': _lastName,
-      'email': _email,
-      'createdAt': _createdAt.toIso8601String(),
-      'updatedAt': _updatedAt?.toIso8601String(),
-    });
-  }
 }

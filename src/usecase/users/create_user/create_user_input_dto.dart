@@ -1,4 +1,4 @@
-import 'dart:convert';
+
 
 final class CreateUserInputDto {
   final String _firstName;
@@ -18,13 +18,4 @@ final class CreateUserInputDto {
   String get lastName => _lastName;
 
   String get email => _email;
-
-  @override
-  String toString() {
-    return json.encode({
-      'firstName': _firstName,
-      'lastName': _lastName,
-      'email': _email,
-    });
-  }
 }

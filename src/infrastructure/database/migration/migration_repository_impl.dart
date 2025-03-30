@@ -26,8 +26,7 @@ class MigrationRepositoryImpl implements MigrationRepository {
       return result.isNotEmpty;
     } catch (exception, stackTrace) {
       throw MigrationException(
-        businessMessage:
-            'Failed to check migration with ID [${id.uuid}]. Please try again.',
+        businessMessage: 'Failed to check migration with ID [${id.uuid}].',
         technicalMessage: 'Unknown error: $exception',
         stackTrace: stackTrace,
       );
@@ -61,8 +60,7 @@ class MigrationRepositoryImpl implements MigrationRepository {
       return true;
     } catch (exception, stackTrace) {
       throw MigrationException(
-        businessMessage:
-            'Failed to migrate with ID [${id.uuid}]. Please try again.',
+        businessMessage: 'Failed to migrate with ID [${id.uuid}].',
         technicalMessage: 'Unknown error: $exception',
         stackTrace: stackTrace,
       );
@@ -83,7 +81,7 @@ class MigrationRepositoryImpl implements MigrationRepository {
     } catch (exception, stackTrace) {
       throw MigrationException(
         businessMessage:
-            'Failed to check whether migration table exists or not. Please try again.',
+            'Failed to check whether migration table exists or not.',
         technicalMessage: 'Unknown error: $exception',
         stackTrace: stackTrace,
       );

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:uuid/uuid.dart';
 
 final class GetAllUsersOutputDto {
@@ -9,13 +7,6 @@ final class GetAllUsersOutputDto {
     : _users = users;
 
   List<GetAllUsersOutputUserDto> get users => _users;
-
-  @override
-  String toString() {
-    return json.encode({
-      'data': _users.map((user) => user.toString()).toList(),
-    });
-  }
 }
 
 final class GetAllUsersOutputUserDto {
@@ -51,16 +42,4 @@ final class GetAllUsersOutputUserDto {
   DateTime get createdAt => _createdAt;
 
   DateTime? get updatedAt => _updatedAt;
-
-  @override
-  String toString() {
-    return json.encode({
-      'id': _id.uuid,
-      'firstName': _firstName,
-      'lastName': _lastName,
-      'email': _email,
-      'createdAt': _createdAt.toIso8601String(),
-      'updatedAt': _updatedAt?.toIso8601String(),
-    });
-  }
 }

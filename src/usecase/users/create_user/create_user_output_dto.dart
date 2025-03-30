@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:uuid/uuid.dart';
 
 final class CreateUserOutputDto {
@@ -30,15 +28,4 @@ final class CreateUserOutputDto {
   String get email => _email;
 
   DateTime get createdAt => _createdAt;
-
-  @override
-  String toString() {
-    return json.encode({
-      'id': _id.uuid,
-      'firstName': _firstName,
-      'lastName': _lastName,
-      'email': _email,
-      'createdAt': _createdAt.toIso8601String(),
-    });
-  }
 }

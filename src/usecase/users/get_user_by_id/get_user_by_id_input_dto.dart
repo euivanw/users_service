@@ -6,13 +6,4 @@ final class GetUserByIdInputDto {
   const GetUserByIdInputDto({required UuidValue id}) : _id = id;
 
   UuidValue get id => _id;
-
-  @override
-  String toString() {
-    return '''
-      GetUserByIdInputDto{
-        id: $_id
-      }
-    ''';
-  }
 }

@@ -105,13 +105,4 @@ final class CreateUserRequestDto {
 
     return Right(null);
   }
-
-  @override
-  String toString() {
-    return json.encode({
-      'firstName': _firstName,
-      'lastName': _lastName,
-      'email': _email,
-    });
-  }
 }

@@ -33,18 +33,4 @@ class UsersEntity {
   DateTime get createdAt => _createdAt;
 
   DateTime? get updatedAt => _updatedAt;
-
-  @override
-  String toString() {
-    return '''
-      UsersEntity{
-        id: $_id,
-        firstName: $_firstName,
-        lastName: $_lastName,
-        email: $_email,
-        createdAt: $_createdAt,
-        updatedAt: $_updatedAt
-      }
-    ''';
-  }
 }

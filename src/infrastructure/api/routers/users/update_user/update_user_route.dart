@@ -45,18 +45,14 @@ final class UpdateUserRoute implements CoreRouter {
     UpdateUserRequestDto requestBodyObject;
 
     try {
-      requestBodyObject = UpdateUserRequestDto.fromJson(
-        requestBody,
-        UuidValue.fromString(userId),
-      );
+      final id = UuidValue.fromString(userId);
+      requestBodyObject = UpdateUserRequestDto.fromJson(requestBody, id);
     } catch (exception) {
       _logger.warning(
         'Invalid JSON format: ${exception.toString().formatText}',
       );
       return JsonResponse.badRequest('Invalid JSON format.');
     }
-
-    _logger.info('Updating user with: $requestBodyObject');
 
     final validationBody = requestBodyObject.validate();
 
