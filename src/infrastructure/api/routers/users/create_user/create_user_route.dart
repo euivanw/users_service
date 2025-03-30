@@ -92,27 +92,27 @@ final class CreateUserRoute implements CoreRouter {
     return [
       LinksResponseDto(
         rel: LinkRelationEnum.self,
-        href: '${_instance.apiVersion}/users/${id.uuid}',
+        href: '/${_instance.apiVersion}/users/${id.uuid}',
         method: LinkMethodEnum.get,
       ),
       LinksResponseDto(
         rel: LinkRelationEnum.update,
-        href: '${_instance.apiVersion}/users/${id.uuid}',
+        href: '/${_instance.apiVersion}/users/${id.uuid}',
         method: LinkMethodEnum.put,
       ),
       LinksResponseDto(
         rel: LinkRelationEnum.delete,
-        href: '${_instance.apiVersion}/users/${id.uuid}',
+        href: '/${_instance.apiVersion}/users/${id.uuid}',
         method: LinkMethodEnum.delete,
       ),
       LinksResponseDto(
         rel: LinkRelationEnum.list,
-        href: '${_instance.apiVersion}/users',
+        href: '/${_instance.apiVersion}/users',
         method: LinkMethodEnum.get,
       ),
       LinksResponseDto(
         rel: LinkRelationEnum.create,
-        href: '${_instance.apiVersion}/users',
+        href: '/${_instance.apiVersion}/users',
         method: LinkMethodEnum.post,
       ),
     ];
