@@ -40,17 +40,12 @@ final class GetAllUsersRoute implements CoreRouter {
 
     return users.fold(
       ifLeft: (exception) {
-        _logger.severe(
-          'Error fetching all users: ${exception.technicalMessage}.',
-          exception,
-        );
         return JsonResponse.internalServerError(exception.businessMessage);
       },
       ifRight: (output) {
-        final usersList = GetAllUsersResponseDto.fromOutputDto(output).toMap();
-
-        _logger.info('Fetched ${usersList.length} users.');
-        return JsonResponse.ok(usersList);
+        return JsonResponse.ok(
+          GetAllUsersResponseDto.fromOutputDto(output).toMap(),
+        );
       },
     );
   }
