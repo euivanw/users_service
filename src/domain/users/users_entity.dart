@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:uuid/uuid.dart';
 
 class UsersEntity {
@@ -33,4 +35,9 @@ class UsersEntity {
   DateTime get createdAt => _createdAt;
 
   DateTime? get updatedAt => _updatedAt;
+
+  @override
+  String toString() {
+    return json.encode({'id': _id.uuid});
+  }
 }
