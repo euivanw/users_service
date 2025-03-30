@@ -7,6 +7,7 @@ import 'package:uuid/validation.dart';
 
 import '../../../../../shared/string_extension.dart';
 import '../../../../../usecase/users/update_user/update_user_usecase.dart';
+import '../../../../database/users/user_not_found_exception.dart';
 import '../../../../database/users/users_repository_impl.dart';
 import '../../server_instance.dart';
 import '../../shared/core_router.dart';
@@ -41,51 +42,59 @@ final class UpdateUserRoute implements CoreRouter {
 
     _logger.info('Updating user with ID: $userId');
 
-    final requestBody = await request.readAsString();
-    UpdateUserRequestDto requestBodyObject;
+    final body = await request.readAsString();
+    final id = UuidValue.fromString(userId);
+    final requestBody = _validateParseBody(body, id);
 
-    try {
-      final id = UuidValue.fromString(userId);
-      requestBodyObject = UpdateUserRequestDto.fromJson(requestBody, id);
-    } catch (exception) {
-      _logger.severe(
-        'Invalid JSON format: ${exception.toString().formatText}',
-        exception,
-      );
-      return JsonResponse.badRequest('Invalid JSON format.');
+    if (requestBody.isLeft) {
+      return (requestBody as Left).value;
     }
 
-    final validationBody = requestBodyObject.validate();
-
-    if (validationBody.isLeft) {
-      _logger.severe(
-        'Validation failed: ${validationBody.toString()}',
-        validationBody,
-      );
-
-      return JsonResponse.badRequest(
-        (validationBody as Left).value.businessMessage,
-      );
-    }
-
+    final userRequestBody = (requestBody as Right).value;
     final repository = UsersRepositoryImpl(connection: _dbconn);
     final usecase = UpdateUserUsecase(repository: repository);
-    final created = await usecase.execute(requestBodyObject.toInputDto());
+    final created = await usecase.execute(userRequestBody.toInputDto());
 
     return created.fold(
       ifLeft: (exception) {
-        _logger.severe(
-          'Error updating user: ${requestBodyObject.toInputDto()} (${exception.technicalMessage}).',
-          exception,
-        );
+        if (exception is UserNotFoundException) {
+          return JsonResponse.notFound(exception.businessMessage);
+        }
+
         return JsonResponse.internalServerError(exception.businessMessage);
       },
       ifRight: (output) {
-        _logger.info('User updated successfully: ${output.toString()}');
         return JsonResponse.created(
           UpdateUserResponseDto.fromOutputDto(output).toMap(),
         );
       },
     );
+  }
+
+  Either<Response, UpdateUserRequestDto> _validateParseBody(
+    String body,
+    UuidValue userId,
+  ) {
+    UpdateUserRequestDto requestBody;
+
+    try {
+      requestBody = UpdateUserRequestDto.fromJson(body, userId);
+    } catch (exception) {
+      final message = exception.toString().formatText;
+      _logger.warning('Invalid JSON format: $message');
+
+      return Left(JsonResponse.badRequest('Invalid JSON format.'));
+    }
+
+    final validationBody = requestBody.validate();
+
+    if (validationBody.isLeft) {
+      final message = (validationBody as Left).value.businessMessage;
+      _logger.warning('Validation failed: $message');
+
+      return Left(JsonResponse.badRequest(message));
+    }
+
+    return Right(requestBody);
   }
 }
