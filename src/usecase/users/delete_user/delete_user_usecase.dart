@@ -3,6 +3,7 @@ import 'package:logging/logging.dart';
 
 import '../../../domain/users/users_exception.dart';
 import '../../../domain/users/users_repository.dart';
+import '../../../infrastructure/database/users/user_not_found_exception.dart';
 import '../../shared/usecase.dart';
 import 'delete_user_input_dto.dart';
 import 'delete_user_output_dto.dart';
@@ -36,12 +37,20 @@ final class DeleteUserUsecase
           updatedAt: user.updatedAt,
         ),
       );
-    } on UsersException catch (exception) {
-      _logger.warning('Failed to delete user: ${exception.businessMessage}');
+    } on UserNotFoundException catch (exception) {
+      _logger.warning('User not found with ID: ${input.id}');
+
+      return Left(exception);
+    } on UsersException catch (exception, strackTrace) {
+      _logger.warning(
+        'Failed to delete user: ${exception.businessMessage}',
+        exception,
+        strackTrace,
+      );
 
       return Left(exception);
     } catch (exception, stackTrace) {
-      _logger.warning(
+      _logger.severe(
         'An unexpected error occurred while deleting the user.',
         exception,
         stackTrace,
