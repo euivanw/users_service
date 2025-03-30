@@ -48,14 +48,12 @@ final class UsersRepositoryImpl implements UsersRepository {
       );
 
       return UsersEntity(
-        id: UuidValue.fromString(user[0][0] as String),
-        firstName: user[0][1] as String,
-        lastName: user[0][2] as String,
-        email: user[0][3] as String,
-        createdAt: user[0][4] as DateTime,
+        id: UuidValue.fromString(user.first[0] as String),
+        firstName: user.first[1] as String,
+        lastName: user.first[2] as String,
+        email: user.first[3] as String,
+        createdAt: user.first[4] as DateTime,
       );
-    } on UsersException {
-      rethrow;
     } catch (exception, stackTrace) {
       throw UsersException(
         businessMessage: 'Failed to create user.',
@@ -66,9 +64,37 @@ final class UsersRepositoryImpl implements UsersRepository {
   }
 
   @override
-  Future<UsersEntity> deleteUser({required UuidValue id}) {
-    // TODO: implement deleteUser
-    throw UnimplementedError();
+  Future<UsersEntity> deleteUser({required UuidValue id}) async {
+    try {
+      final user = await _connection.execute(
+        Sql.named('''
+          DELETE FROM users
+          WHERE       id = @id
+          RETURNING   id,
+                      first_name,
+                      last_name,
+                      email,
+                      created_at,
+                      updated_at
+        '''),
+        parameters: {'id': id.uuid},
+      );
+
+      return UsersEntity(
+        id: UuidValue.fromString(user.first[0] as String),
+        firstName: user.first[1] as String,
+        lastName: user.first[2] as String,
+        email: user.first[3] as String,
+        createdAt: user.first[4] as DateTime,
+        updatedAt: user.first[5] as DateTime?,
+      );
+    } catch (exception, stackTrace) {
+      throw UsersException(
+        businessMessage: 'Failed to delete user with ID [${id.uuid}]',
+        technicalMessage: 'Unknown error: $exception',
+        stackTrace: stackTrace,
+      );
+    }
   }
 
   @override
@@ -97,8 +123,6 @@ final class UsersRepositoryImpl implements UsersRepository {
           updatedAt: user[5] as DateTime?,
         );
       }).toList();
-    } on UsersException {
-      rethrow;
     } catch (exception, stackTrace) {
       throw UsersException(
         businessMessage: 'Failed to retrieve all users.',
@@ -132,12 +156,12 @@ final class UsersRepositoryImpl implements UsersRepository {
       }
 
       return UsersEntity(
-        id: UuidValue.fromString(user[0][0] as String),
-        firstName: user[0][1] as String,
-        lastName: user[0][2] as String,
-        email: user[0][3] as String,
-        createdAt: user[0][4] as DateTime,
-        updatedAt: user[0][5] as DateTime?,
+        id: UuidValue.fromString(user.first[0] as String),
+        firstName: user.first[1] as String,
+        lastName: user.first[2] as String,
+        email: user.first[3] as String,
+        createdAt: user.first[4] as DateTime,
+        updatedAt: user.first[5] as DateTime?,
       );
     } on UsersException {
       rethrow;
@@ -190,15 +214,13 @@ final class UsersRepositoryImpl implements UsersRepository {
       );
 
       return UsersEntity(
-        id: UuidValue.fromString(user[0][0] as String),
-        firstName: user[0][1] as String,
-        lastName: user[0][2] as String,
-        email: user[0][3] as String,
-        createdAt: user[0][4] as DateTime,
-        updatedAt: user[0][5] as DateTime,
+        id: UuidValue.fromString(user.first[0] as String),
+        firstName: user.first[1] as String,
+        lastName: user.first[2] as String,
+        email: user.first[3] as String,
+        createdAt: user.first[4] as DateTime,
+        updatedAt: user.first[5] as DateTime,
       );
-    } on UsersException {
-      rethrow;
     } catch (exception, stackTrace) {
       throw UsersException(
         businessMessage: 'Failed to update user with ID [${id.uuid}].',
