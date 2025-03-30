@@ -8,7 +8,6 @@ import '../../../../database/users/users_repository_impl.dart';
 import '../../server_instance.dart';
 import '../../shared/core_router.dart';
 import '../../shared/json_response.dart';
-import '../shared/create_links_function.dart';
 import 'get_all_users_response_dto.dart';
 
 final class GetAllUsersRoute implements CoreRouter {
@@ -44,15 +43,9 @@ final class GetAllUsersRoute implements CoreRouter {
         return JsonResponse.internalServerError(exception.businessMessage);
       },
       ifRight: (output) {
-        GetAllUsersResponseDto responseDto = GetAllUsersResponseDto(
-          users:
-              output.users.map((user) {
-                final links = createUserLinks(_instance.apiVersion, user.id);
-                return GetAllUsersResponseUserDto.fromOutputDto(user, links);
-              }).toList(),
+        return JsonResponse.ok(
+          GetAllUsersResponseDto.fromOutputDto(output).toMap(),
         );
-
-        return JsonResponse.ok(responseDto.toMap());
       },
     );
   }

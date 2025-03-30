@@ -1,7 +1,6 @@
 import 'package:uuid/uuid.dart';
 
 import '../../../../../usecase/users/get_all_users/get_all_users_output_dto.dart';
-import '../../shared/links_response_dto.dart';
 
 final class GetAllUsersResponseDto {
   final List<GetAllUsersResponseUserDto> _users;
@@ -9,6 +8,15 @@ final class GetAllUsersResponseDto {
   const GetAllUsersResponseDto({
     required List<GetAllUsersResponseUserDto> users,
   }) : _users = users;
+
+  factory GetAllUsersResponseDto.fromOutputDto(GetAllUsersOutputDto output) {
+    return GetAllUsersResponseDto(
+      users:
+          output.users
+              .map((user) => GetAllUsersResponseUserDto.fromOutputDto(user))
+              .toList(),
+    );
+  }
 
   List<Map<String, dynamic>> toMap() {
     return _users.map((user) => user.toMap()).toList();
@@ -24,7 +32,6 @@ final class GetAllUsersResponseUserDto {
   final String _email;
   final DateTime _createdAt;
   final DateTime? _updatedAt;
-  final List<LinksResponseDto>? _links;
 
   const GetAllUsersResponseUserDto({
     required UuidValue id,
@@ -33,18 +40,15 @@ final class GetAllUsersResponseUserDto {
     required String email,
     required DateTime createdAt,
     DateTime? updatedAt,
-    List<LinksResponseDto>? links,
   }) : _id = id,
        _firstName = firstName,
        _lastName = lastName,
        _email = email,
        _createdAt = createdAt,
-       _updatedAt = updatedAt,
-       _links = links;
+       _updatedAt = updatedAt;
 
   factory GetAllUsersResponseUserDto.fromOutputDto(
     GetAllUsersOutputUserDto output,
-    List<LinksResponseDto> links,
   ) {
     return GetAllUsersResponseUserDto(
       id: output.id,
@@ -53,7 +57,6 @@ final class GetAllUsersResponseUserDto {
       email: output.email,
       createdAt: output.createdAt,
       updatedAt: output.updatedAt,
-      links: links,
     );
   }
 
@@ -65,7 +68,6 @@ final class GetAllUsersResponseUserDto {
       'email': _email,
       'createdAt': _createdAt.toIso8601String(),
       'updatedAt': _updatedAt?.toIso8601String(),
-      'links': _links?.map((link) => link.toMap()).toList(),
     };
   }
 }

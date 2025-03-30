@@ -11,7 +11,6 @@ import '../../../../database/users/users_repository_impl.dart';
 import '../../server_instance.dart';
 import '../../shared/core_router.dart';
 import '../../shared/json_response.dart';
-import '../shared/create_links_function.dart';
 import 'delete_user_response_dto.dart';
 
 final class DeleteUserRoute implements CoreRouter {
@@ -55,10 +54,9 @@ final class DeleteUserRoute implements CoreRouter {
         return JsonResponse.internalServerError(exception.businessMessage);
       },
       ifRight: (output) {
-        final links = createUserLinks(_instance.apiVersion, output.id);
-        final deletedUser = DeleteUserResponseDto.fromOutputDto(output, links);
-
-        return JsonResponse.ok(deletedUser.toMap());
+        return JsonResponse.ok(
+          DeleteUserResponseDto.fromOutputDto(output).toMap(),
+        );
       },
     );
   }

@@ -11,7 +11,6 @@ import '../../../../database/users/users_repository_impl.dart';
 import '../../server_instance.dart';
 import '../../shared/core_router.dart';
 import '../../shared/json_response.dart';
-import '../shared/create_links_function.dart';
 import 'get_user_by_id_response_dto.dart';
 
 final class GetUserByIdRoute implements CoreRouter {
@@ -56,10 +55,9 @@ final class GetUserByIdRoute implements CoreRouter {
         return JsonResponse.internalServerError(exception.businessMessage);
       },
       ifRight: (output) {
-        final links = createUserLinks(_instance.apiVersion, output.id);
-        final user = GetUserByIdResponseDto.fromOutputDto(output, links);
-
-        return JsonResponse.ok(user.toMap());
+        return JsonResponse.ok(
+          GetUserByIdResponseDto.fromOutputDto(output).toMap(),
+        );
       },
     );
   }

@@ -1,7 +1,6 @@
 import 'package:uuid/uuid.dart';
 
 import '../../../../../usecase/users/delete_user/delete_user_output_dto.dart';
-import '../../shared/links_response_dto.dart';
 
 final class DeleteUserResponseDto {
   final UuidValue _id;
@@ -10,7 +9,6 @@ final class DeleteUserResponseDto {
   final String _email;
   final DateTime _createdAt;
   final DateTime? _updatedAt;
-  final List<LinksResponseDto>? _links;
 
   const DeleteUserResponseDto({
     required UuidValue id,
@@ -19,19 +17,14 @@ final class DeleteUserResponseDto {
     required String email,
     required DateTime createdAt,
     DateTime? updatedAt,
-    List<LinksResponseDto>? links,
   }) : _id = id,
        _firstName = firstName,
        _lastName = lastName,
        _email = email,
        _createdAt = createdAt,
-       _updatedAt = updatedAt,
-       _links = links;
+       _updatedAt = updatedAt;
 
-  factory DeleteUserResponseDto.fromOutputDto(
-    DeleteUserOutputDto output,
-    List<LinksResponseDto> links,
-  ) {
+  factory DeleteUserResponseDto.fromOutputDto(DeleteUserOutputDto output) {
     return DeleteUserResponseDto(
       id: output.id,
       firstName: output.firstName,
@@ -39,7 +32,6 @@ final class DeleteUserResponseDto {
       email: output.email,
       createdAt: output.createdAt,
       updatedAt: output.updatedAt,
-      links: links,
     );
   }
 
@@ -51,7 +43,6 @@ final class DeleteUserResponseDto {
       'email': _email,
       'createdAt': _createdAt.toIso8601String(),
       'updatedAt': _updatedAt?.toIso8601String(),
-      'links': _links?.map((link) => link.toMap()).toList(),
     };
   }
 }
