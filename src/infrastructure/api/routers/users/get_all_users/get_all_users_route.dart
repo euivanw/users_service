@@ -1,7 +1,6 @@
 import 'package:logging/logging.dart';
 import 'package:postgres/postgres.dart';
 import 'package:shelf/shelf.dart';
-import 'package:uuid/uuid_value.dart';
 
 import '../../../../../usecase/users/get_all_users/get_all_users_input_dto.dart';
 import '../../../../../usecase/users/get_all_users/get_all_users_usecase.dart';
@@ -9,9 +8,7 @@ import '../../../../database/users/users_repository_impl.dart';
 import '../../server_instance.dart';
 import '../../shared/core_router.dart';
 import '../../shared/json_response.dart';
-import '../../shared/link_method_enum.dart';
-import '../../shared/link_relation_enum.dart';
-import '../../shared/links_response_dto.dart';
+import '../shared/create_links_function.dart';
 import 'get_all_users_response_dto.dart';
 
 final class GetAllUsersRoute implements CoreRouter {
@@ -50,7 +47,7 @@ final class GetAllUsersRoute implements CoreRouter {
         GetAllUsersResponseDto responseDto = GetAllUsersResponseDto(
           users:
               output.users.map((user) {
-                final links = _createLinks(user.id);
+                final links = createUserLinks(_instance.apiVersion, user.id);
                 return GetAllUsersResponseUserDto.fromOutputDto(user, links);
               }).toList(),
         );
@@ -58,35 +55,5 @@ final class GetAllUsersRoute implements CoreRouter {
         return JsonResponse.ok(responseDto.toMap());
       },
     );
-  }
-
-  List<LinksResponseDto> _createLinks(UuidValue id) {
-    return [
-      LinksResponseDto(
-        rel: LinkRelationEnum.self,
-        href: '/${_instance.apiVersion}/users/${id.uuid}',
-        method: LinkMethodEnum.get,
-      ),
-      LinksResponseDto(
-        rel: LinkRelationEnum.update,
-        href: '/${_instance.apiVersion}/users/${id.uuid}',
-        method: LinkMethodEnum.put,
-      ),
-      LinksResponseDto(
-        rel: LinkRelationEnum.delete,
-        href: '/${_instance.apiVersion}/users/${id.uuid}',
-        method: LinkMethodEnum.delete,
-      ),
-      LinksResponseDto(
-        rel: LinkRelationEnum.list,
-        href: '/${_instance.apiVersion}/users',
-        method: LinkMethodEnum.get,
-      ),
-      LinksResponseDto(
-        rel: LinkRelationEnum.create,
-        href: '/${_instance.apiVersion}/users',
-        method: LinkMethodEnum.post,
-      ),
-    ];
   }
 }
