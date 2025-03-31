@@ -16,9 +16,11 @@ on:
         type: boolean
         default: false
     secrets:
-      registry-username:
+      docker-username:
         required: true
-      registry-password:
+      docker-password:
+        required: true
+      sonar-token:
         required: true
 jobs:
   docker:
@@ -28,6 +30,11 @@ jobs:
     steps:
       - name: "Checkout repository"
         uses: actions/checkout@v4.2.2
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ inputs.sonar-token }}
 
       - name: "Setup Docker Buildx"
         if: success()
@@ -39,8 +46,8 @@ jobs:
         if: success()
         uses: docker/login-action@v3.4.0
         with:
-          username: ${{ secrets.registry-username }}
-          password: ${{ secrets.registry-password }}
+          username: ${{ secrets.docker-username }}
+          password: ${{ secrets.docker-password }}
 
       - name: "Docker build and push"
         if: success()
