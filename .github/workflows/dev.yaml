@@ -1,0 +1,31 @@
+name: "Development CI"
+
+on:
+  pull_request:
+    branches: [ "*" ]
+
+jobs:
+  analyze:
+    name: "Analyze"
+    uses: ./.github/workflows/analyze.yaml
+    with:
+      sdk-version: ${{ vars.DART_SDK_VERSION }}
+
+  tests:
+    name: "Tests"
+    uses: ./.github/workflows/test.yaml
+    with:
+      sdk-version: ${{ vars.DART_SDK_VERSION }}
+
+  build:
+    name: "Build"
+    needs: [ analyze, tests ]
+    uses: ./.github/workflows/docker.yaml
+    secrets:
+      registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
+      registry-password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    with:
+      tag-name: ${{ vars.DOCKERHUB_TAG }}
+      tag-version: SNAPSHOT-${{ github.run_id }}
+      container-platforms: ${{ vars.DOCKER_PLATFORMS }}
+      push-to-registry: false

@@ -39,9 +39,6 @@ generated.
 | `(MINOR)`     | Minor             | `1.0.0`          | `1.1.0`     |
 | `LEAVE EMPTY` | Patch             | `1.0.0`          | `1.0.1`     |
 
-> Hint: Remember to update the version within `pubspec.yaml` file to the version
-> that you'll generate before generate it.
-
 ## Running the application with Docker:
 
 Finally, run the following command in the root directory of this project:

@@ -1,0 +1,52 @@
+name: "Docker CI"
+
+on:
+  workflow_call:
+    inputs:
+      tag-name:
+        type: string
+        required: true
+      tag-version:
+        type: string
+        required: true
+      container-platforms:
+        type: string
+        required: true
+      push-to-registry:
+        type: boolean
+        default: false
+    secrets:
+      registry-username:
+        required: true
+      registry-password:
+        required: true
+jobs:
+  docker:
+    name: "Docker"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v4.2.2
+
+      - name: "Setup Docker Buildx"
+        if: success()
+        uses: docker/setup-buildx-action@v3.10.0
+        with:
+          platforms: ${{ inputs.container-platforms }}
+
+      - name: "Docker login"
+        if: success()
+        uses: docker/login-action@v3.4.0
+        with:
+          username: ${{ secrets.registry-username }}
+          password: ${{ secrets.registry-password }}
+
+      - name: "Docker build and push"
+        if: success()
+        uses: docker/build-push-action@v6.15.0
+        with:
+          push: ${{ inputs.push-to-registry }}
+          file: ./Dockerfile
+          platforms: ${{ inputs.container-platforms }}
+          tags: "${{ inputs.tag-name }}:${{ inputs.tag-version }}"
