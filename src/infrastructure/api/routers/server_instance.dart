@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:shelf_router/shelf_router.dart';
 
 class ServerInstance {
@@ -9,7 +11,7 @@ class ServerInstance {
 
   ServerInstance()
     : _app = Router(),
-      _port = int.fromEnvironment('SERVER_PORT'),
+      _port = int.parse(Platform.environment['SERVER_PORT'] as String),
       _apiVersion = 'v1';
 
   Router get app => _app;
