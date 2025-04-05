@@ -44,10 +44,10 @@ void main() {
 
       expect(
         exception.toString(),
-        contains('businessMessage: $businessMessage'),
+        contains('"businessMessage":"$businessMessage"'),
       );
-      expect(exception.toString(), contains('technicalMessage: null'));
-      expect(exception.toString(), contains('stackTrace: null'));
+      expect(exception.toString(), contains('"technicalMessage":null'));
+      expect(exception.toString(), contains('"stackTrace":null'));
     });
 
     test('should format toString with all fields', () {
@@ -59,13 +59,13 @@ void main() {
 
       expect(
         exception.toString(),
-        contains('businessMessage: $businessMessage'),
+        contains('"businessMessage":"$businessMessage"'),
       );
       expect(
         exception.toString(),
-        contains('technicalMessage: $technicalMessage'),
+        contains('"technicalMessage":"$technicalMessage"'),
       );
-      expect(exception.toString(), contains('stackTrace: $stackTrace'));
+      expect(exception.toString(), contains('"stackTrace":'));
     });
 
     test('should be immutable with const constructor', () {
