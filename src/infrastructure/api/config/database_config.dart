@@ -7,7 +7,7 @@ abstract class DatabaseConfig {
     host: Platform.environment['DB_HOST'] as String,
     port: int.parse(Platform.environment['DB_PORT'] as String),
     database: Platform.environment['DB_NAME'] as String,
-    username: Platform.environment['DB_USER'] as String,
+    username: Platform.environment['DB_USERNAME'] as String,
     password: Platform.environment['DB_PASSWORD'] as String,
   );
 }

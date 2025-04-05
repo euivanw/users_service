@@ -14,6 +14,12 @@ to the project.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed environment variable DB_USERNAME.
+
+## [1.0.1] - 2025-04-05
+
 ### Added
 
 - Create a Git Tag on GitHub when a new version is released.

@@ -1,3 +1,6 @@
+# This is a Kubernete file for setting up a users service for example.
+# Don't use this file in production without proper security measures.
+
 apiVersion: v1
 kind: Namespace
 metadata:
