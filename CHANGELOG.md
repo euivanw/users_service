@@ -16,6 +16,20 @@ to the project.
 
 ### Added
 
+- Create a Git Tag on GitHub when a new version is released.
+- Added Docker compose and Kubernetes deployment example files.
+
+### Fixed
+
+- Fixed the update_version GitHub Action.
+- Fixed the [Unreleased] section related to the version 1.0.0 in the changelog.
+- Fixed the way to look for environment variables.
+- Fixed the generation of Docker image.
+
+## [1.0.0] - 2025-04-05
+
+### Added
+
 - Ability to generate database migrations.
 - Ability to create a users table into the database.
 - Ability to create, update, delete, read and list users.

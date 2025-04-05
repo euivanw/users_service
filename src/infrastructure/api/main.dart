@@ -25,13 +25,11 @@ Future<void> main() async {
 
     final server = await ServerCommand.startServer(dbconn);
     log.info('Server listening on port ${server.port}.');
-  } on CoreException catch (exception) {
-    log.severe(exception.businessMessage);
+  } on CoreException catch (exception, stackTrace) {
+    log.severe(exception.businessMessage, exception, stackTrace);
     exit(1);
   } catch (exception, stackTrace) {
-    log.severe('An unknown error occurred.');
-    log.severe(exception);
-    log.severe(stackTrace);
+    log.severe('An unknown error occurred.', exception, stackTrace);
     exit(1);
   }
 }

@@ -1,0 +1,50 @@
+# This is a Docker Compose file for setting up a PostgreSQL database and a users service for example.
+# Don't use this file in production without proper security measures.
+
+services:
+  postgresql:
+    image: postgres:latest
+    container_name: postgresql
+    hostname: postgresql
+    restart: unless-stopped
+    networks:
+      - users_network
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=users_db
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+    command: >
+      -c ssl=on 
+      -c ssl_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
+      -c ssl_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
+
+  users:
+    image: ivanwilhelm/users-service:latest
+    container_name: users
+    hostname: users
+    restart: unless-stopped
+    networks:
+      - users_network
+    depends_on:
+      - postgresql
+    ports:
+      - "8080:8080"
+    environment:
+      - SERVER_PORT=8080
+      - DB_HOST=postgresql
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=admin
+      - DB_NAME=users_db
+
+volumes:
+  postgresql_data:
+    driver: local
+
+networks:
+  users_network:
+    driver: bridge
