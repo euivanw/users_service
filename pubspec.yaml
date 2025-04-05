@@ -1,6 +1,6 @@
 name: users_service
 description: This service is responsible for managing users.
-version: 1.0.1
+version: 1.0.2
 repository: https://github.com/euivanw/users-service
 environment:
   sdk: ^3.7.1

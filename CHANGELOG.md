@@ -14,6 +14,8 @@ to the project.
 
 ## [Unreleased]
 
+## [v1.0.2] - 2025-04-05
+
 ### Fixed
 
 - Fixed environment variable DB_USERNAME.
