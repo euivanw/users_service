@@ -1,0 +1,43 @@
+name: "Release CI"
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  analyze:
+    name: "Analyze"
+    uses: ./.github/workflows/analyze.yaml
+    with:
+      sdk-version: ${{ vars.DART_SDK_VERSION }}
+
+  tests:
+    name: "Tests"
+    uses: ./.github/workflows/test.yaml
+    with:
+      sdk-version: ${{ vars.DART_SDK_VERSION }}
+
+  version:
+    name: "Version"
+    needs: [ analyze, tests ]
+    uses: ./.github/workflows/version.yaml
+
+  update_version:
+    name: "Update Version"
+    needs: [ version ]
+    uses: ./.github/workflows/update_version.yaml
+    with:
+      tag-version: ${{ needs.version.outputs.version }}
+
+  build:
+    name: "Build"
+    needs: [ update_version, version ]
+    uses: ./.github/workflows/build.yaml
+    secrets:
+      docker-username: ${{ secrets.DOCKERHUB_USERNAME }}
+      docker-password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    with:
+      tag-name: ${{ vars.DOCKERHUB_TAG }}
+      tag-version: ${{ needs.version.outputs.version }}
+      container-platforms: ${{ vars.DOCKER_PLATFORMS }}
+      push-to-registry: true

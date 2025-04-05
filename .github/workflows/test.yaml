@@ -1,0 +1,31 @@
+name: "Dart Test CI"
+
+on:
+  workflow_call:
+    inputs:
+      sdk-version:
+        type: string
+        required: true
+
+jobs:
+  test:
+    name: "Tests"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v4.2.2
+
+      - name: "Setup Dart SDK"
+        if: success()
+        uses: dart-lang/setup-dart@v1.7.1
+        with:
+          sdk: ${{ inputs.sdk-version }}
+
+      - name: "Update dependencies"
+        if: success()
+        run: dart pub get || false
+
+      - name: "Tests"
+        if: success()
+        run: dart run test || false
