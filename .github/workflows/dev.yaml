@@ -17,14 +17,9 @@ jobs:
     with:
       sdk-version: ${{ vars.DART_SDK_VERSION }}
 
-  sonar:
-    name: "SonarQube"
-    needs: [ analyze, tests ]
-    uses: ./.github/workflows/sonar.yaml
-
   build:
     name: "Build"
-    needs: [ sonar ]
+    needs: [ analyze, tests ]
     uses: ./.github/workflows/build.yaml
     secrets:
       docker-username: ${{ secrets.DOCKERHUB_USERNAME }}
