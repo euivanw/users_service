@@ -29,9 +29,14 @@ jobs:
     with:
       tag-version: ${{ needs.version.outputs.version }}
 
+  sonar:
+    name: "SonarQube"
+    needs: [ update_version, version ]
+    uses: ./.github/workflows/sonar.yaml
+
   build:
     name: "Build"
-    needs: [ update_version, version ]
+    needs: [ sonar ]
     uses: ./.github/workflows/build.yaml
     secrets:
       docker-username: ${{ secrets.DOCKERHUB_USERNAME }}
